@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Role Play Scenario Cards | UQ Dietetics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', system-ui, sans-serif; background: #f5f0fa; color: #2a2a3a; min-height: 100vh; }
+
+/* HEADER */
+header { background: linear-gradient(135deg, #2a2a3a, #51247a); color: #fff; padding: 2.5rem 2rem 2rem; text-align: center; }
+header h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 700; margin-bottom: 0.5rem; }
+header p { font-size: 0.95rem; opacity: 0.85; margin-bottom: 1.25rem; line-height: 1.6; }
+.header-tags { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+.header-tag { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 0.2rem 0.8rem; font-size: 0.78rem; }
+
+/* INSTRUCTIONS */
+.instructions { max-width: 900px; margin: 1.5rem auto 0; padding: 0 1.5rem; }
+.instr-box { background: #fff; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 3px 14px rgba(0,0,0,0.07); border-left: 5px solid #c4821a; }
+.instr-box h3 { font-family: 'Cormorant Garamond', Georgia, serif; color: #c4821a; margin-bottom: 0.85rem; font-size: 1.1rem; }
+.instr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; }
+.instr-item { display: flex; gap: 0.6rem; align-items: flex-start; }
+.instr-icon { font-size: 1.3rem; flex-shrink: 0; }
+.instr-title { font-weight: 600; font-size: 0.85rem; color: #2a2a3a; margin-bottom: 0.15rem; }
+.instr-desc { font-size: 0.8rem; color: #666; line-height: 1.5; }
+
+/* FILTERS */
+.filters { max-width: 900px; margin: 1.25rem auto 0; padding: 0 1.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.filter-btn { padding: 0.5rem 1.1rem; border-radius: 20px; border: 2px solid #ddd; background: #fff; color: #666; font-size: 0.82rem; cursor: pointer; font-weight: 400; transition: all 0.2s; font-family: inherit; }
+.filter-btn.active { background: #51247a; border-color: #51247a; color: #fff; font-weight: 600; }
+
+/* GRID */
+.cards-grid { max-width: 900px; margin: 1.25rem auto 2rem; padding: 0 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.25rem; }
+.card-wrap { display: flex; flex-direction: column; }
+.card-wrap.hidden { display: none; }
+
+/* CARD */
+.card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 100%; }
+
+/* CARD HEADER */
+.card-header { padding: 1rem 1.25rem; color: #fff; }
+.card-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+.card-tag { background: rgba(255,255,255,0.25); border-radius: 20px; padding: 0.15rem 0.65rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; }
+.card-id { background: rgba(255,255,255,0.2); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
+.card-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.05rem; font-weight: 700; line-height: 1.3; }
+
+/* SCENARIO */
+.card-scenario { padding: 1rem 1.25rem; flex: 1; }
+.scenario-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+.scenario-text { font-size: 0.88rem; line-height: 1.65; color: #2a2a3a; }
+
+/* REFLECTION */
+.card-reflection { margin: 0 1.25rem 1rem; border-radius: 10px; padding: 0.75rem 1rem; border-left: 3px solid; }
+.reflection-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+.reflection-text { font-size: 0.84rem; line-height: 1.55; font-style: italic; color: #2a2a3a; }
+
+/* TOGGLE BTN */
+.toggle-btn { margin: 0 1.25rem 1.25rem; border: none; border-radius: 10px; padding: 0.65rem 1rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; text-align: center; color: #fff; font-family: inherit; transition: opacity 0.2s; }
+.toggle-btn:hover { opacity: 0.88; }
+
+/* BACK CONTENT */
+.card-back { border-top: 2px dashed rgba(0,0,0,0.1); padding: 1rem 1.25rem 1.25rem; display: none; }
+.card-back.open { display: block; }
+.back-section { margin-bottom: 1rem; }
+.back-section:last-child { margin-bottom: 0; }
+.back-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+.back-text { font-size: 0.84rem; line-height: 1.6; color: #2a2a3a; }
+.observer-item { display: flex; gap: 0.5rem; margin-bottom: 0.4rem; align-items: flex-start; font-size: 0.83rem; line-height: 1.55; color: #2a2a3a; }
+.obs-box { font-size: 0.8rem; color: #888; flex-shrink: 0; margin-top: 1px; }
+
+/* DEBRIEF */
+.debrief { max-width: 900px; margin: 0 auto 2rem; padding: 0 1.5rem; }
+.debrief-panel { background: linear-gradient(135deg, #2a2a3a, #51247a); border-radius: 16px; padding: 1.75rem 2rem; color: #fff; }
+.debrief-panel h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.25rem; margin-bottom: 1.1rem; color: #d4b8f0; }
+.debrief-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.85rem; }
+.debrief-q { background: rgba(255,255,255,0.08); border-radius: 10px; padding: 0.85rem 1rem; font-size: 0.88rem; line-height: 1.6; color: rgba(255,255,255,0.9); font-style: italic; }
+
+/* FOOTER */
+footer { text-align: center; padding: 1.5rem; font-size: 0.8rem; color: #888; border-top: 1px solid #e8e0f0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Role Play Scenario Cards</h1>
+  <p>Trauma-Informed Care &nbsp;·&nbsp; Difficult Conversations<br/>
+  <span style="font-size:0.82rem;opacity:0.7">School of Human Movement and Nutrition Sciences — University of Queensland</span></p>
+  <div class="header-tags">
+    <span class="header-tag">5 scenarios</span>
+    <span class="header-tag">Patient &amp; colleague role notes inside</span>
+    <span class="header-tag">Observer prompts included</span>
+  </div>
+</header>
+
+<div class="instructions">
+  <div class="instr-box">
+    <h3>How to Use These Cards</h3>
+    <div class="instr-grid">
+      <div class="instr-item">
+        <span class="instr-icon">👤</span>
+        <div><div class="instr-title">Pairs or triads</div><div class="instr-desc">One dietitian, one patient/colleague, one observer (if triad)</div></div>
+      </div>
+      <div class="instr-item">
+        <span class="instr-icon">⏱️</span>
+        <div><div class="instr-title">5 min per round</div><div class="instr-desc">Then swap roles — being the patient is as important as being the clinician</div></div>
+      </div>
+      <div class="instr-item">
+        <span class="instr-icon">👁️</span>
+        <div><div class="instr-title">Observer role</div><div class="instr-desc">Use the prompts on the card — give 2 min structured feedback after each round</div></div>
+      </div>
+      <div class="instr-item">
+        <span class="instr-icon">🔄</span>
+        <div><div class="instr-title">Round 2</div><div class="instr-desc">New cards — including the staff conversation. Work in triads.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterCards('all', this)">All Cards</button>
+  <button class="filter-btn" onclick="filterCards('1', this)">Round 1 — Patient Scenarios</button>
+  <button class="filter-btn" onclick="filterCards('2', this)">Round 2 — Including Staff</button>
+</div>
+
+<div class="cards-grid" id="cards-grid">
+
+  <!-- CARD A -->
+  <div class="card-wrap" data-round="1">
+    <div class="card" style="border:2px solid #2d6b5a;">
+      <div class="card-header" style="background:linear-gradient(135deg,#2d6b5a,#2d6b5acc);">
+        <div class="card-meta">
+          <span class="card-tag">ROUND 1 · EMOTIONAL DISTRESS</span>
+          <span class="card-id">A</span>
+        </div>
+        <div class="card-title">Patient Becomes Tearful Mid-Consult</div>
+      </div>
+      <div class="card-scenario">
+        <div class="scenario-label" style="color:#2d6b5a;">Scenario</div>
+        <p class="scenario-text">You are a student dietitian seeing Priya, 52, for a follow-up after her Type 2 diabetes diagnosis. You are mid-way through reviewing her food diary when she suddenly becomes tearful. She says: "I'm sorry. I just can't do this. My mum died from diabetes complications and I feel like I'm going the same way."</p>
+      </div>
+      <div class="card-reflection" style="background:rgba(45,107,90,0.08);border-color:#2d6b5a;">
+        <div class="reflection-label" style="color:#2d6b5a;">Reflection</div>
+        <p class="reflection-text">What is the dietitian's 'job' in this moment — and what is it not?</p>
+      </div>
+      <button class="toggle-btn" style="background:#2d6b5a;" onclick="toggleCard(this)">▼ Show Role Notes &amp; Observer Prompts</button>
+      <div class="card-back">
+        <div class="back-section">
+          <div class="back-label" style="color:#2d6b5a;">🎭 Patient Role Notes</div>
+          <p class="back-text">You are exhausted and grieving. You don't want more advice — you want to feel heard. If the student immediately pivots back to the food diary or gives nutrition information, become more withdrawn.</p>
+        </div>
+        <div class="back-section">
+          <div class="back-label" style="color:#2d6b5a;">👁️ Observer Prompts</div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did the dietitian pause the dietary agenda?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did they validate before they advised?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>What specific language did they use?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did they ask permission before continuing with nutrition content?</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD B -->
+  <div class="card-wrap" data-round="1">
+    <div class="card" style="border:2px solid #8c3a2a;">
+      <div class="card-header" style="background:linear-gradient(135deg,#8c3a2a,#8c3a2acc);">
+        <div class="card-meta">
+          <span class="card-tag">ROUND 1 · RESISTANCE &amp; AMBIVALENCE</span>
+          <span class="card-id">B</span>
+        </div>
+        <div class="card-title">Patient Who Hasn't Made Any Changes</div>
+      </div>
+      <div class="card-scenario">
+        <div class="scenario-label" style="color:#8c3a2a;">Scenario</div>
+        <p class="scenario-text">Marcus, 45, is back for a follow-up appointment. At his last session he received clear advice about reducing saturated fat following a cardiac event. He hasn't made any changes. He comes in looking flat and says: "I know what you're going to say. I just haven't been able to do it. I don't really see the point of all this."</p>
+      </div>
+      <div class="card-reflection" style="background:rgba(140,58,42,0.08);border-color:#8c3a2a;">
+        <div class="reflection-label" style="color:#8c3a2a;">Reflection</div>
+        <p class="reflection-text">What is the difference between a patient who 'can't' change and a patient who 'won't' — and does that distinction even matter?</p>
+      </div>
+      <button class="toggle-btn" style="background:#8c3a2a;" onclick="toggleCard(this)">▼ Show Role Notes &amp; Observer Prompts</button>
+      <div class="card-back">
+        <div class="back-section">
+          <div class="back-label" style="color:#8c3a2a;">🎭 Patient Role Notes</div>
+          <p class="back-text">You are grieving the life you had before your heart attack. Food was important to you — it was social, cultural, pleasurable. The advice to change it feels like another loss. If the student repeats the advice again or seems frustrated with you, shut down further. If they genuinely explore what's behind the resistance, open up a little.</p>
+        </div>
+        <div class="back-section">
+          <div class="back-label" style="color:#8c3a2a;">👁️ Observer Prompts</div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did the student avoid repeating the same advice?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did they explore what was underneath the resistance?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did they use any MI techniques (reflection, affirmation, open questions)?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did they avoid the righting reflex?</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD C -->
+  <div class="card-wrap" data-round="1">
+    <div class="card" style="border:2px solid #5a7a4a;">
+      <div class="card-header" style="background:linear-gradient(135deg,#5a7a4a,#5a7a4acc);">
+        <div class="card-meta">
+          <span class="card-tag">ROUND 1 · TRAUMA RESPONSE — SHUTDOWN</span>
+          <span class="card-id">C</span>
+        </div>
+        <div class="card-title">Patient Who Goes Very Quiet</div>
+      </div>
+      <div class="card-scenario">
+        <div class="scenario-label" style="color:#5a7a4a;">Scenario</div>
+        <p class="scenario-text">You are taking a dietary history from Leila, 34, following bariatric surgery. The consultation is going reasonably well until you ask about her home eating environment. She suddenly goes very quiet, gives one-word answers, and seems to have 'gone somewhere else'. Her notes mention a history of childhood trauma.</p>
+      </div>
+      <div class="card-reflection" style="background:rgba(90,122,74,0.08);border-color:#5a7a4a;">
+        <div class="reflection-label" style="color:#5a7a4a;">Reflection</div>
+        <p class="reflection-text">How do you distinguish between a patient who is bored/disengaged and one who has dissociated? What would you look for?</p>
+      </div>
+      <button class="toggle-btn" style="background:#5a7a4a;" onclick="toggleCard(this)">▼ Show Role Notes &amp; Observer Prompts</button>
+      <div class="card-back">
+        <div class="back-section">
+          <div class="back-label" style="color:#5a7a4a;">🎭 Patient Role Notes</div>
+          <p class="back-text">A question about home environment triggered a memory. You haven't shut down on purpose — you've dissociated slightly. You aren't being rude. If the student pushes forward with the dietary history regardless, close down further. If they gently name what they observe and slow down, you can re-engage.</p>
+        </div>
+        <div class="back-section">
+          <div class="back-label" style="color:#5a7a4a;">👁️ Observer Prompts</div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did the student notice the change in the patient?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did they name it gently without labelling it?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did they drop the dietary agenda to check in?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did they ask whether to continue, stop, or take a break?</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD D -->
+  <div class="card-wrap" data-round="2">
+    <div class="card" style="border:2px solid #8c3a2a;">
+      <div class="card-header" style="background:linear-gradient(135deg,#8c3a2a,#8c3a2acc);">
+        <div class="card-meta">
+          <span class="card-tag">ROUND 2 · UNEXPECTED DISCLOSURE</span>
+          <span class="card-id">D</span>
+        </div>
+        <div class="card-title">Patient Discloses Unsafe Home Environment</div>
+      </div>
+      <div class="card-scenario">
+        <div class="scenario-label" style="color:#8c3a2a;">Scenario</div>
+        <p class="scenario-text">You are seeing Margaret, 67, for unintentional weight loss. While asking about who prepares her meals at home, she mentions quietly that her husband 'controls what she's allowed to eat' and that sometimes she goes without food when he is angry. This is not in her referral notes.</p>
+      </div>
+      <div class="card-reflection" style="background:rgba(140,58,42,0.08);border-color:#8c3a2a;">
+        <div class="reflection-label" style="color:#8c3a2a;">Reflection</div>
+        <p class="reflection-text">As a student you cannot manage a safeguarding disclosure alone. What is your immediate next step — and who do you contact?</p>
+      </div>
+      <button class="toggle-btn" style="background:#8c3a2a;" onclick="toggleCard(this)">▼ Show Role Notes &amp; Observer Prompts</button>
+      <div class="card-back">
+        <div class="back-section">
+          <div class="back-label" style="color:#8c3a2a;">🎭 Patient Role Notes</div>
+          <p class="back-text">This is the first time you have said this out loud to anyone in a healthcare setting. You are not sure if you should have said it. You are worried about causing trouble. If the student immediately phones someone without asking you, become frightened and withdraw the disclosure. If they are gentle, transparent, and ask your permission before doing anything, stay cautiously engaged.</p>
+        </div>
+        <div class="back-section">
+          <div class="back-label" style="color:#8c3a2a;">👁️ Observer Prompts</div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did the student clarify without leading?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Were they transparent about their scope as a student?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did they seek consent before involving a supervisor?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did they remove blame from the patient?</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD E -->
+  <div class="card-wrap" data-round="2">
+    <div class="card" style="border:2px solid #51247a;">
+      <div class="card-header" style="background:linear-gradient(135deg,#51247a,#51247acc);">
+        <div class="card-meta">
+          <span class="card-tag">ROUND 2 · STAFF CONVERSATION</span>
+          <span class="card-id">E</span>
+        </div>
+        <div class="card-title">Colleague Dismissing a Patient</div>
+      </div>
+      <div class="card-scenario">
+        <div class="scenario-label" style="color:#51247a;">Scenario</div>
+        <p class="scenario-text">You are a student dietitian. After seeing a patient (a 44-year-old woman with depression who has lost significant weight), you mention your concerns to the ward dietitian. She says: "Oh, her. She's been like this for months. She doesn't engage with anyone — just non-compliant. I wouldn't waste too much time on her, honestly. Just document it and move on."</p>
+      </div>
+      <div class="card-reflection" style="background:rgba(81,36,122,0.08);border-color:#51247a;">
+        <div class="reflection-label" style="color:#51247a;">Reflection</div>
+        <p class="reflection-text">You are a student and this is a senior colleague. What are the limits of your responsibility here — and what are your options?</p>
+      </div>
+      <button class="toggle-btn" style="background:#51247a;" onclick="toggleCard(this)">▼ Show Role Notes &amp; Observer Prompts</button>
+      <div class="card-back">
+        <div class="back-section">
+          <div class="back-label" style="color:#51247a;">👥 Colleague Role Notes</div>
+          <p class="back-text">You are busy and a little burnt out. You're not being cruel — you've genuinely lost perspective on this patient. If the student pushes back aggressively, become defensive. If they approach with curiosity and gentle reframing, be open to a different view.</p>
+        </div>
+        <div class="back-section">
+          <div class="back-label" style="color:#51247a;">👁️ Observer Prompts</div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did the student advocate for the patient without confronting the colleague directly?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did they use curiosity rather than correction?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>Did they acknowledge their own limits as a student?</span></div>
+          <div class="observer-item"><span class="obs-box">◻</span><span>What would they do if the colleague still dismissed the concern?</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DEBRIEF -->
+<div class="debrief">
+  <div class="debrief-panel">
+    <h3>Full Debrief Prompts</h3>
+    <div class="debrief-grid">
+      <div class="debrief-q">"What was it like to be the patient?"</div>
+      <div class="debrief-q">"When did you feel the urge to give advice before listening?"</div>
+      <div class="debrief-q">"What did you notice about your own body during the role play?"</div>
+      <div class="debrief-q">"What would you do differently on placement?"</div>
+      <div class="debrief-q">"What felt most difficult — and why?"</div>
+      <div class="debrief-q">"What do you need to feel ready for these conversations?"</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Trauma-Informed Care &amp; Difficult Conversations &nbsp;·&nbsp; School of Human Movement and Nutrition Sciences, University of Queensland
+</footer>
+
+<script>
+function toggleCard(btn) {
+  var back = btn.nextElementSibling;
+  var isOpen = back.classList.contains('open');
+  back.classList.toggle('open', !isOpen);
+  btn.textContent = isOpen ? '▼ Show Role Notes & Observer Prompts' : '▲ Hide Role Notes';
+}
+
+function filterCards(round, btn) {
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.card-wrap').forEach(function(card) {
+    if (round === 'all' || card.dataset.round === round) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+}
+</script>
+
+</body>
+</html>
